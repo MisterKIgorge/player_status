@@ -19,7 +19,7 @@ function PlayerInformation:InitEventListeners()
 
                 for i, player in ipairs(AllPlayers) do
                     if self.inst ~= player then
-                        TheNetEvent:PushEventOnOwnerEntity(player.GUID, self.inst.GUID, "net_" .. event, remove_data)
+                        TheNetEvent:PushEventOnOwnerEntity(player.GUID, self.inst.GUID, "net_" .. event, remote_data)
                     else
                         self.inst:PushEvent("net_" .. event, remote_data)
                     end

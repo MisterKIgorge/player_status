@@ -64,15 +64,17 @@ local function PlayerStatus(self)
                 :SetIconOpacity(icon_opacity)
                 :SetTextOpacity(text_opacity)
 
-            local function UpdateText(inst, remote_data)
-                if remote_data.name == data.tooltip then
-                    item:SetText(textfn(remote_data.stats, data))
+            local function UpdateText()
+                local player_status = self.owner and self.owner.components.player_status 
+                if player_status and player_status.stats and player_status.stats[data.tooltip] then
+                    item:SetText(textfn(player_status.stats[data.tooltip], data))
                 end
             end
 
             for _, event in pairs(data.events) do
-                self.owner:RemoveEventCallback("net_" .. event, UpdateText)
-                self.owner:ListenForEvent("net_" .. event, UpdateText)
+                self.owner:RemoveEventCallback(event, UpdateText)
+                self.owner:ListenForEvent(event, UpdateText)
+                UpdateText()
             end
         end
     end
@@ -111,6 +113,5 @@ end
 AddClassPostConstruct("widgets/ftf/playerstatuswidget", PlayerStatus)
 
 AddPlayerPostInit(function(inst)
-    if not inst:IsLocal() then return end
     inst:AddComponent("player_status")
 end)

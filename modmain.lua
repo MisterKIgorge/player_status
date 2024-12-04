@@ -64,9 +64,9 @@ local function PlayerStatus(self)
                 :SetIconOpacity(icon_opacity)
                 :SetTextOpacity(text_opacity)
 
-            local function UpdateText(inst, remove_data) --TODO: remote_data*
-                if remove_data.name == data.tooltip then
-                    item:SetText(textfn(remove_data.stats, data))
+            local function UpdateText(inst, remote_data)
+                if remote_data.name == data.tooltip then
+                    item:SetText(textfn(remote_data.stats, data))
                 end
             end
 

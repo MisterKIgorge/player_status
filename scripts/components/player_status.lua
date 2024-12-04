@@ -11,7 +11,7 @@ function PlayerInformation:InitEventListeners()
     for i, data in pairs(StatusDefs.GetStatusData()) do
         for i, event in pairs(data.events) do
             local function UpdateServerData()
-                local remove_data = {
+                local remote_data = {
                     stats = data.fn(self.inst),
                     name = data.tooltip,
                     owner = self.inst,
@@ -21,7 +21,7 @@ function PlayerInformation:InitEventListeners()
                     if self.inst ~= player then
                         TheNetEvent:PushEventOnOwnerEntity(player.GUID, self.inst.GUID, "net_" .. event, remove_data)
                     else
-                        self.inst:PushEvent("net_" .. event, remove_data)
+                        self.inst:PushEvent("net_" .. event, remote_data)
                     end
                 end
             end

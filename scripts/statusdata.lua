@@ -1,19 +1,17 @@
-local status_data = {}
-local function AddStatusData(image, events, tooltip, fn, ispercent, textfn, d_pos)
-    if status_data[d_pos] then
-        local _status_data = deepcopy(status_data) -- замена
-        for i = #status_data, d_pos, -1 do 
-            status_data[i + 1] = _status_data[i]
-        end
+local StatsList = {}
+local function AddStatusData(id, data)
+    local StatusData = {}
+    for opt, val in pairs(data) do
+        StatusData[opt] = val
     end
-    status_data[d_pos or #status_data + 1] = {
-        image = image,
-        events = events,
-        tooltip = tooltip,
-        fn = fn,
-        textfn = textfn,
-        ispercent = ispercent,
-    }
+    StatusData.id = id
+
+    local pos = data.pos or #StatsList + 1
+    table.insert(StatsList, pos, StatusData)
+
+    if not StatusData.tooltip and STRINGS.PLAYER_STAT_DISPLAYER and STRINGS.PLAYER_STAT_DISPLAYER[string.upper(id)] then
+        StatusData.tooltip = STRINGS.PLAYER_STAT_DISPLAYER[string.upper(id)]
+    end
 
     if TheGlobalInstance then
         TheGlobalInstance:PushEvent("new_statdata")
@@ -21,7 +19,7 @@ local function AddStatusData(image, events, tooltip, fn, ispercent, textfn, d_po
 end
 
 local function GetStatusData()
-    return status_data
+    return StatsList
 end
 
 local function EmitateAttack(inst)

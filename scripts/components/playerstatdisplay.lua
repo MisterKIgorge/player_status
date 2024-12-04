@@ -1,4 +1,4 @@
-local StatusDefs = require ("statusdefs")
+local StatusDefs = require ("statusdata")
 local DataDumper = require "util.datadumper"
 
 local PlayerStatDisplay = nil
@@ -11,12 +11,12 @@ end)
 
 function PlayerStatDisplay:InitEventListeners()
     for i, data in pairs(StatusDefs.GetStatusData()) do
-        if not self.stats[data.tooltip] then
-            self.stats[data.tooltip] = {}
+        if not self.stats[data.id] then
+            self.stats[data.id] = {}
         end
 
         local function UpdatePlayerStats()
-            self.stats[data.tooltip] = data.fn(self.inst)
+            self.stats[data.id] = data.fn(self.inst)
         end
         
         for i, event in pairs(data.events) do

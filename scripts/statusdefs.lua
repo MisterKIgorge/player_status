@@ -33,7 +33,7 @@ local function EmitateAttack(inst)
     ent.components.combat:SetBaseDamage(ent, 0)
     ent:DoTaskInTime(0, ent.Remove)
 
-    local base_damage = inst.components.combat.basedamage:Get()
+    local base_damage = inst.components.combat:GetBaseDamage()
     local attack = Attack(inst, ent)
             :SetDamage(base_damage) 
             :SetTarget(ent) -- Сделать атакующим не игрока, а его копию, а иначе вернуть deepcopy
@@ -42,7 +42,7 @@ local function EmitateAttack(inst)
 end
 
 local function PowersDamageCalc(inst, crit)
-    local base_damage = inst.components.combat.basedamage:Get()
+    local base_damage = inst.components.combat:GetBaseDamage()
     local attack = EmitateAttack(inst)
     local powers = inst.components.powermanager:GetAllPowersInAcquiredOrder() 
     local outputs = {
@@ -62,7 +62,7 @@ local function PowersDamageCalc(inst, crit)
 end
 
 local function PowersDefenceCalc(inst)
-    local base_damage = inst.components.combat.basedamage:Get()
+    local base_damage = inst.components.combat:GetBaseDamage()
     local attack = EmitateAttack(inst)
     local powers = inst.components.powermanager:GetAllPowersInAcquiredOrder() 
     local outputs = {

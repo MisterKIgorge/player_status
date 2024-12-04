@@ -111,5 +111,6 @@ end
 AddClassPostConstruct("widgets/ftf/playerstatuswidget", PlayerStatus)
 
 AddPlayerPostInit(function(inst)
+    if not inst:IsLocal() then return end
     inst:AddComponent("player_status")
 end)

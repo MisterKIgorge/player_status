@@ -65,9 +65,9 @@ local function PlayerStatus(self)
                 :SetTextOpacity(text_opacity)
 
             local function UpdateText()
-                local player_status = self.owner and self.owner.components.player_status 
-                if player_status and player_status.stats and player_status.stats[data.tooltip] then
-                    item:SetText(textfn(player_status.stats[data.tooltip], data))
+                local playerstatdisplay = self.owner and self.owner.components.playerstatdisplay
+                if playerstatdisplay and playerstatdisplay.stats and playerstatdisplay.stats[data.tooltip] then
+                    item:SetText(textfn(playerstatdisplay.stats[data.tooltip], data))
                 end
             end
 
@@ -113,5 +113,5 @@ end
 AddClassPostConstruct("widgets/ftf/playerstatuswidget", PlayerStatus)
 
 AddPlayerPostInit(function(inst)
-    inst:AddComponent("player_status")
+    inst:AddComponent("playerstatdisplay")
 end)

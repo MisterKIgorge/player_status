@@ -1,15 +1,15 @@
 local StatusDefs = require ("statusdefs")
 local DataDumper = require "util.datadumper"
 
-local PlayerInformation = nil
-PlayerInformation = Class(function(self, inst)
+local PlayerStatDisplay = nil
+PlayerStatDisplay = Class(function(self, inst)
     self.inst = inst
     self.stats = {}
 
     self:InitEventListeners()
 end)
 
-function PlayerInformation:InitEventListeners()
+function PlayerStatDisplay:InitEventListeners()
     for i, data in pairs(StatusDefs.GetStatusData()) do
         if not self.stats[data.tooltip] then
             self.stats[data.tooltip] = {}
@@ -27,16 +27,16 @@ function PlayerInformation:InitEventListeners()
     end
 end
 
-function PlayerInformation:OnNetSerialize()
+function PlayerStatDisplay:OnNetSerialize()
 	local e = self.inst.entity
 
     e:SerializeString(DataDumper(self.stats, nil, true))
 end
 
-function PlayerInformation:OnNetDeserialize()
+function PlayerStatDisplay:OnNetDeserialize()
 	local e = self.inst.entity
 
 	self.stats = e:DeserializeString()
 end
 
-return PlayerInformation
+return PlayerStatDisplay

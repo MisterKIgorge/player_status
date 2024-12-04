@@ -1,35 +1,42 @@
 local StatusDefs = require ("statusdefs")
+local DataDumper = require "util.datadumper"
 
 local PlayerInformation = nil
 PlayerInformation = Class(function(self, inst)
     self.inst = inst
+    self.stats = {}
 
-    -- self:InitEventListeners()
+    self:InitEventListeners()
 end)
 
--- function PlayerInformation:InitEventListeners()
---     for i, data in pairs(StatusDefs.GetStatusData()) do
---         for i, event in pairs(data.events) do
---             local function UpdateServerData()
---                 local remote_data = {
---                     stats = data.fn(self.inst),
---                     name = data.tooltip,
---                     owner = self.inst,
---                 }
+function PlayerInformation:InitEventListeners()
+    for i, data in pairs(StatusDefs.GetStatusData()) do
+        if not self.stats[data.tooltip] then
+            self.stats[data.tooltip] = {}
+        end
 
---                 for i, player in ipairs(AllPlayers) do
---                     if self.inst ~= player then
---                         TheNetEvent:PushEventOnOwnerEntity(player.GUID, self.inst.GUID, "net_" .. event, remote_data)
---                     else
---                         self.inst:PushEvent("net_" .. event, remote_data)
---                     end
---                 end
---             end
+        local function UpdatePlayerStats()
+            self.stats[data.tooltip] = data.fn(self.inst)
+        end
+        
+        for i, event in pairs(data.events) do
+            self.inst:RemoveEventCallback(event, UpdatePlayerStats)
+            self.inst:ListenForEvent(event, UpdatePlayerStats)
+        end
+        UpdatePlayerStats()
+    end
+end
 
---             self.inst:RemoveEventCallback(event, UpdateServerData)
---             self.inst:ListenForEvent(event, UpdateServerData)
---         end
---     end
--- end
+function PlayerInformation:OnNetSerialize()
+	local e = self.inst.entity
+
+    e:SerializeString(DataDumper(self.stats, nil, true))
+end
+
+function PlayerInformation:OnNetDeserialize()
+	local e = self.inst.entity
+
+	self.stats = e:DeserializeString()
+end
 
 return PlayerInformation

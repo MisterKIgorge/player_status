@@ -1,5 +1,7 @@
 local StatsList = {}
 local function AddStatusData(id, data)
+    assert(type(id) == "string", "ID is unknown " .. (data.tooltip or ""))
+
     local StatusData = {}
     for opt, val in pairs(data) do
         StatusData[opt] = val

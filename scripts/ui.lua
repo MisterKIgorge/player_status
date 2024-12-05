@@ -11,8 +11,12 @@ local text_scale = 1
 local icon_opacity = 1
 local text_opacity = 1
 
-local function MakeText(stats, data)
-    return stats .. (data.ispercent and "%" or "")
+local function MakeText(value, data)
+    if value then
+        return value / (data.accuracy and 10 ^ data.accuracy or 100) .. (data.ispercent and "%" or "")
+    end
+
+    return ""
 end
 
 local function PlayerStatus(self)
@@ -30,18 +34,16 @@ local function PlayerStatus(self)
                 :SetTextOpacity(text_opacity)
 
             local function UpdateText()
-                local playerstatdisplay = self.owner and self.owner.components.playerstatdisplay
-                if playerstatdisplay and playerstatdisplay.stats and playerstatdisplay.stats[data.id] then
-                    item:SetText(textfn(playerstatdisplay.stats[data.id], data))
-                end
+                local stats = self.owner.components.playerstatdisplay and self.owner.components.playerstatdisplay:GetStats(data.id) or nil
+                local text = textfn(stats, data)
+                item:SetText(text)
             end
 
-            for _, event in pairs(data.events) do
-                self.owner:RemoveEventCallback(event, UpdateText)
-                self.owner:ListenForEvent(event, UpdateText)
-                UpdateText()
-            end
+            self.owner:RemoveEventCallback("statusupdated_" .. data.id, UpdateText)
+            self.owner:ListenForEvent("statusupdated_" .. data.id, UpdateText)
+            UpdateText()
         end
+        self:_Layout()
     end
 
     -- change the loot stack position (loot picked up popups)
@@ -73,6 +75,6 @@ local function PlayerStatus(self)
     end
 
     self:player_stats_widgets_Rebuild()
-    self.owner:ListenForEvent("new_statdata", function() self:stats_list_Rebuild() end, GLOBAL.TheGlobalInstance)
+    self.owner:ListenForEvent("new_statdata", function() self:player_stats_widgets_Rebuild() end, GLOBAL.TheGlobalInstance)
 end
 AddClassPostConstruct("widgets/ftf/playerstatuswidget", PlayerStatus)

@@ -31,6 +31,7 @@ AddStatusData("armor", { -- "Armor"
     end,
     
     events = {"loadout_changed"},
+    -- accuracy = 0, -- 0 number after ',' example: 3.5 -> 4
 
     image = "images/icons_ftf/inventory_head.tex",
     ispercent = true,
@@ -46,3 +47,17 @@ AddStatusData("speed", { -- "Speed mult"
     image = "images/icons_ftf/inventory_legs.tex",
     ispercent = true,
 })
+
+-- for i = 1, 128 do
+--     AddStatusData("n_" .. i, {
+--         fn = function(inst)
+--             return math.random(1, 100)
+--         end,
+
+--         events = {"activate_skill", "add_state_tag", "attack_end", "attack_start", "death", "do_damage", "dodge", "dodge_cancel", "dying", "enter_room", "exit_room", "foley_footstep", "hammer_thumped", "healthchanged", "heavy_attack", "hitboxcollided_invincible", "hitboxtriggered", "hitstreak", "hitstreak_killed", "juggernaut_force_remove", "kill", "light_attack", "parry", "power_charged_damage", "power_stacks_changed", "projectile_launched", "remove_state_tag", "revive", "shotput_landed", "start_gameplay", "take_damage", "take_heal", "timerdone"},
+
+--         tooltip = "n_" .. math.random(),
+--         image = "images/icons_ftf/inventory_weapon_hammer.tex",
+--         ispercent = true,
+--     })
+-- end
